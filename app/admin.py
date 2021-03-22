@@ -1,23 +1,23 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 
 from .models import *
 
 admin.site.site_title = "KASSA"
 admin.site.site_header = "KASSA"
 
+
 @admin.register(Transaction)
 class CostsAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "sum", "pub_date")
     list_display_links = ("id", "name")
+    list_filter = (
+        ('pub_date', DateFieldListFilter),
+        ('updated_at', DateTimeRangeFilter)
+    )
     search_fields = ('id', 'name')
     readonly_fields = ('id', 'pub_date')
-
-
-@admin.register(TypeIn)
-class IncomeAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
-    list_display_links = ("id", "name")
 
 
 
