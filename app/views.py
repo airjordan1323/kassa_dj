@@ -2,14 +2,8 @@ from .serializers import *
 from rest_framework import filters, generics, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
-from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
-from datetime import datetime
+from rest_framework.parsers import JSONParser
 
-# class BigListPagination(PageNumberPagination):
-#     page_size = 20
-#     page_size_query_param = 'page_size'
-#     max_page_size = 40
 
 class ItemView(generics.CreateAPIView):
     serializer_class = ItemUpSerializer
@@ -19,8 +13,8 @@ class ItemGetView(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['id', 'name']
-    ordering_fields = ['id', 'price', 'name']
+    search_fields = ['id', 'name', 'description']
+    ordering_fields = ['id', 'price', 'name', 'pub_date']
 
 
 class ItemDeleteView(generics.DestroyAPIView):
@@ -38,29 +32,30 @@ class ItemUpdateView(generics.UpdateAPIView):
     serializer_class = ItemUpSerializer
 
 
-class TransGetView(APIView):
-    # queryset = Transaction.objects.all
-    # serializer = TransactionViewSerializer
+class BuyView(APIView):
+    parser_classes = [JSONParser]
 
-    def get(self, request):
-        transaction = Transaction.objects.all()
-        serializer = TransactionViewSerializer(transaction, many=True)
-        item = Item.objects.all()
-        products = ItemSerializer(item, many=True)
-        typing = TypeIn.objects.all()
-        type = TypeSerializer(typing, many=True)
-        return Response({'queryset': serializer.data,
-                         'item': products.data,
-                         'typing': type.data})
+    def post(self, request):
+        """
+            :param request:
+            :return:
+        """
+        final = 0
+        freq = {}
+        for i in request.data['items']:
+            final += i['price']
+            if i['id'] in freq:
+                freq[i['id']] += 1
+            else:
+                freq[i['id']] = 1
 
-
-# class InComeView(APIView):
-#
-#     def post(self, request, pk):
-#         income = Income.objects.all()
-#         ser = InComeSerializer(income)
-#         item = Item.objects.all()
-#         serializer = ItemSerializer(item)
-#         return Response({'ser:': ser.data, 'serializer': serializer.data})
-
-
+        try:
+            transaction = Transaction.objects.create(type="INCOME", sum=final)
+            for item_id, count in freq.items():
+                item = Item.objects.get(id=item_id)
+                item.count -= count
+                item.save()
+                transaction.items.add(item_id)
+            return Response({"status": "added"}, status=201)
+        except Exception as e:
+            return Response({"status": e}, status=500)

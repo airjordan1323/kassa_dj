@@ -34,6 +34,7 @@ class Item(models.Model):
     image = models.ImageField("Изображение", upload_to='images')
     pub_date = models.DateTimeField("Дата добавления", default=datetime.now,
                                     help_text="Дата, когда товар был добавлен в базу")
+
     # trans = models.ForeignKey('Transaction', verbose_name="Транзакция", on_delete=models.CASCADE, blank=True,
     #                           null=True)
 
@@ -50,25 +51,25 @@ class Item(models.Model):
         verbose_name_plural = "Товары"
 
 
-class TypeIn(models.Model):
-    name = models.CharField("Раздел", max_length=250)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Тип"
-        verbose_name_plural = "Типы"
-
 
 class Transaction(models.Model):
     name = models.CharField("Наименование", max_length=250, blank=True)
-    item = models.ManyToManyField(Item, verbose_name="цены Товаров")
-    type_in = models.ForeignKey(TypeIn, verbose_name="Тип", on_delete=models.CASCADE)
+    items = models.ManyToManyField(Item, verbose_name="цены Товаров", related_name="trans", blank=True, null=True)
+    TYPE_CHOICE = (
+        ('OUTCOME', 'OUTCOME'),
+        ('INCOME', 'INCOME')
+    )
+    type = models.CharField("Тип", max_length=12, choices=TYPE_CHOICE)
     sum = models.PositiveIntegerField("Цена")
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True,
                                     help_text="Дата, когда товар был добавлен в базу")
+    last_change = models.DateTimeField("Дата изменении", auto_now_add=True,
+                                       help_text="Дата, когда товар был редактирован")
 
+    def save(self, *args, **kwargs):
+        if self.type == "INCOME":
+            self.name = "INCOME"
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Транзакция"
