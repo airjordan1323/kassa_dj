@@ -13,8 +13,8 @@ class CostsAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "sum", "pub_date")
     list_display_links = ("id", "name")
     list_filter = (
-        ('pub_date', DateFieldListFilter),
-        ('updated_at', DateTimeRangeFilter)
+        ('pub_date', DateRangeFilter),
+        ('last_change', DateTimeRangeFilter),
     )
     search_fields = ('id', 'name')
     readonly_fields = ('id', 'pub_date')
