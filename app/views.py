@@ -1,5 +1,6 @@
+from datetime import timezone
 from .serializers import *
-from rest_framework import filters, generics, viewsets
+from rest_framework import filters, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import JSONParser
@@ -10,7 +11,7 @@ class ItemView(generics.CreateAPIView):
 
 
 class ItemListView(generics.ListAPIView):
-    queryset = Item.objects.all()
+    queryset = Item.objects.all()  # filter(pub_date__range=timezone.now())
     serializer_class = ItemListSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['id', 'name', 'description']
@@ -22,10 +23,7 @@ class ItemDetailView(APIView):
     def get(self, request, pk):
         item = Item.objects.get(id=pk)
         serializer = ItemDetailSerializer(item, context={'request': request})
-        # transaction = Transaction.objects.filter()
-        # serial = TransactionSerializer(transaction)
         return Response({'item': serializer.data})
-
 
 
 class ItemDeleteView(generics.DestroyAPIView):

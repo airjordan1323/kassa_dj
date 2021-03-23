@@ -34,7 +34,6 @@ class Item(models.Model):
     pub_date = models.DateTimeField("Дата добавления", default=datetime.now,
                                     help_text="Дата, когда товар был добавлен в базу")
 
-
     def save(self, *args, **kwargs):
         if self.min_percent is None:
             self.min_percent = self.percent
@@ -46,7 +45,6 @@ class Item(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
-
 
 
 class Transaction(models.Model):

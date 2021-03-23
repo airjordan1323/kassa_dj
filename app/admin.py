@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
-
 from .models import *
 
 admin.site.site_title = "KASSA"
@@ -24,6 +23,8 @@ class CostsAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "get_image_thumb", "description", "sell_price", "count")
     list_display_links = ("id", "name", "get_image_thumb")
+    save_on_top = True
+    save_as = True
     search_fields = ('id', 'name', 'description')
     readonly_fields = ('pub_date', 'id', 'sell_price', 'income', 'min_price', 'mid_price', 'quantity_self',
                        'quantity_percent', 'get_image',)
@@ -77,4 +78,3 @@ class ItemAdmin(admin.ModelAdmin):
 
     def get_image_thumb(self, obj):
         return mark_safe(f'<img src={obj.image.url} width="160" height="160">')
-

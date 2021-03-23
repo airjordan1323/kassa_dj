@@ -4,11 +4,8 @@ from .models import *
 
 class ItemListSerializer(serializers.ModelSerializer):
     max_price = serializers.SerializerMethodField()
-    # income = serializers.SerializerMethodField()
     min_price = serializers.SerializerMethodField()
     mid_price = serializers.SerializerMethodField()
-    # quantity_percent = serializers.SerializerMethodField()
-    # quantity_self = serializers.SerializerMethodField()
 
     class Meta:
         model = Item
@@ -33,29 +30,6 @@ class ItemListSerializer(serializers.ModelSerializer):
             return new_price
         except:
             return 0
-
-    # def get_income(self, obj):
-    #     try:
-    #         new_price = (obj.price + ((obj.percent * obj.price) / 100))
-    #         return new_price - obj.price
-    #     except:
-    #         return 0
-        # return "{:,} сум".format(int(income))
-        # return "{:,} сум".format(int(new_price))
-
-    # def get_quantity_percent(self, obj):
-    #     try:
-    #         total = (obj.price + ((obj.percent * obj.price) / 100)) * obj.count
-    #     except:
-    #         total = 0
-    #     return "{:,} сум".format(int(total))
-    #
-    # def get_quantity_self(self, obj):
-    #     try:
-    #         total = obj.price * obj.count
-    #     except:
-    #         total = 0
-    #     return "{:,} сум".format(int(total))
 
 
 class ItemDetailSerializer(serializers.ModelSerializer):
@@ -123,8 +97,8 @@ class ItemTransSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    # item = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
     items = ItemTransSerializer(many=True)
+
     class Meta:
         model = Transaction
         fields = '__all__'
