@@ -116,17 +116,18 @@ class ItemUpSerializer(serializers.ModelSerializer):
         exclude = "pub_date",
 
 
-class ItemListSerializer(serializers.ModelSerializer):
+class ItemTransSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ("id", "name",)
+        fields = 'id', 'name',
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    item = ItemListSerializer()
+    # item = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
+    items = ItemTransSerializer(many=True)
     class Meta:
         model = Transaction
-        fields = "id", "name", "item", "type", "sum", "pub_date"
+        fields = '__all__'
 
 
 class BuyItemSerializer(serializers.ModelSerializer):
