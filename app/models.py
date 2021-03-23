@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import datetime
+from user.models import Account
 
 
 class Item(models.Model):
@@ -48,8 +50,9 @@ class Item(models.Model):
 
 
 class Transaction(models.Model):
+    author = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="Кассир")
     name = models.CharField("Наименование", max_length=250, blank=True)
-    items = models.ManyToManyField(Item, verbose_name="цены Товаров", related_name="trans", blank=True, null=True)
+    items = models.ManyToManyField(Item, verbose_name="цены Товаров", related_name="trans", blank=True)
     TYPE_CHOICE = (
         ('OUTCOME', 'OUTCOME'),
         ('INCOME', 'INCOME')
