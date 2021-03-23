@@ -33,9 +33,11 @@ class ItemDeleteView(generics.DestroyAPIView):
     serializer_class = ItemUpSerializer
 
 
-class TransPostView(generics.CreateAPIView):
-    trans = Transaction.objects.all()
-    serializer_class = TransactionSerializer
+class TransPostView(APIView):
+    def get(self, request, pk):
+        trans = Transaction.objects.get(id=pk)
+        serializer = TransactionSerializer(trans)
+        return Response({'transaction': serializer.data})
 
 
 class ItemUpdateView(generics.UpdateAPIView):
