@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from user.models import Account
 
 
 class ItemListSerializer(serializers.ModelSerializer):
@@ -96,8 +97,15 @@ class ItemTransSerializer(serializers.ModelSerializer):
         fields = 'id', 'name',
 
 
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = 'id', 'username',
+
+
 class TransactionSerializer(serializers.ModelSerializer):
     items = ItemTransSerializer(many=True)
+    author = AccountSerializer()
 
     class Meta:
         model = Transaction
@@ -105,6 +113,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class BuyItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Item
-        fields = "id", "name", "item", "type_in", "sum", "pub_date"
+        fields = "id", "name", "item", "type_in", "sum", "pub_date",

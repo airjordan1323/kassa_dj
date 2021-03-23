@@ -1,4 +1,5 @@
 from datetime import timezone
+from rest_framework.pagination import LimitOffsetPagination
 from .serializers import *
 from rest_framework import filters, generics
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ class ItemView(generics.CreateAPIView):
 class ItemListView(generics.ListAPIView):
     queryset = Item.objects.all()  # filter(pub_date__range=timezone.now())
     serializer_class = ItemListSerializer
+    pagination_class = LimitOffsetPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['id', 'name', 'description']
     ordering_fields = ['id', 'price', 'name', 'pub_date']
