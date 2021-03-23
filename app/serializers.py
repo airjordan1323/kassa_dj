@@ -70,23 +70,11 @@ class ItemListSerializer(serializers.ModelSerializer):
         fields = ("id", "name",)
 
 
-
-
 class TransactionSerializer(serializers.ModelSerializer):
     item = ItemListSerializer()
-    # type_in = TypeSerializer()
     class Meta:
         model = Transaction
         fields = "id", "name", "item", "type", "sum", "pub_date"
-
-
-class TransactionViewSerializer(serializers.ModelSerializer):
-    item = ItemListSerializer()
-    # type_in = TypeSerializer()
-
-    class Meta:
-        model = Transaction
-        fields = "id", "name", "item", "type_in", "sum", "pub_date"
 
 
 class BuyItemSerializer(serializers.ModelSerializer):

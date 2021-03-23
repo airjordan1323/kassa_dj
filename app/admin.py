@@ -20,7 +20,6 @@ class CostsAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'pub_date')
 
 
-
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "get_image_thumb", "description", "sell_price", "count")
