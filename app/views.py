@@ -1,4 +1,3 @@
-from datetime import date
 from .serializers import *
 from rest_framework import filters, generics, viewsets
 from rest_framework.response import Response
@@ -10,12 +9,23 @@ class ItemView(generics.CreateAPIView):
     serializer_class = ItemUpSerializer
 
 
-class ItemGetView(generics.ListAPIView):
+class ItemListView(generics.ListAPIView):
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ItemListSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['id', 'name', 'description']
     ordering_fields = ['id', 'price', 'name', 'pub_date']
+
+
+class ItemDetailView(APIView):
+
+    def get(self, request, pk):
+        item = Item.objects.get(id=pk)
+        serializer = ItemDetailSerializer(item, context={'request': request})
+        # transaction = Transaction.objects.filter()
+        # serial = TransactionSerializer(transaction)
+        return Response({'item': serializer.data})
+
 
 
 class ItemDeleteView(generics.DestroyAPIView):

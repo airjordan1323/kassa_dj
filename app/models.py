@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.utils import timezone
 from datetime import datetime
 
 
@@ -35,8 +34,6 @@ class Item(models.Model):
     pub_date = models.DateTimeField("Дата добавления", default=datetime.now,
                                     help_text="Дата, когда товар был добавлен в базу")
 
-    # trans = models.ForeignKey('Transaction', verbose_name="Транзакция", on_delete=models.CASCADE, blank=True,
-    #                           null=True)
 
     def save(self, *args, **kwargs):
         if self.min_percent is None:
