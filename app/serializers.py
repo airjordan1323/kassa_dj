@@ -90,7 +90,6 @@ class ItemUpSerializer(serializers.ModelSerializer):
         model = Item
         exclude = "pub_date",
 
-
 class ItemTransSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
@@ -106,6 +105,32 @@ class AccountSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     items = ItemTransSerializer(many=True)
     author = AccountSerializer()
+
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+
+#############################
+class TransactionsPostSerializer(serializers.ModelSerializer):
+    # items = ItemTransSerializer(many=True)
+    author = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Transaction
+        fields = '__all__'
+
+        def get_author(self, obj, request):
+            author = Transaction.objects.filter(author=request.user).count()
+            serializer = AccountSerializer(author)
+            return serializer.data
+######################33333
+
+
+
+class TransactionPostSerializer(serializers.ModelSerializer):
+    # items = ItemTransSerializer(many=True)
+    # author = AccountSerializer()
 
     class Meta:
         model = Transaction

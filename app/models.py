@@ -12,19 +12,10 @@ class Item(models.Model):
         "Количество",
         default=0
     )
-    percent = models.PositiveSmallIntegerField(
-        "Процент наценки",
-        default=0,
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)
-        ],
-        help_text="Добавочный процент от закупочной стоимости"
-    )
+    percent = models.PositiveSmallIntegerField("Процент наценки")
     min_percent = models.PositiveSmallIntegerField(
         "Минимальный Процент наценки",
         validators=[
-            MaxValueValidator(100),
             MinValueValidator(0)
         ],
         blank=True, null=True,
@@ -32,7 +23,8 @@ class Item(models.Model):
     )
     description = models.CharField('Описание', blank=True, null=True, max_length=600,
                                    help_text="Краткое описание товара")
-    image = models.ImageField("Изображение", upload_to='images')
+    image = models.ImageField("Изображение", upload_to='images/', null=True, blank=True,
+                              help_text="Изображение Товара")
     pub_date = models.DateTimeField("Дата добавления", default=datetime.now,
                                     help_text="Дата, когда товар был добавлен в базу")
 
@@ -50,7 +42,7 @@ class Item(models.Model):
 
 
 class Transaction(models.Model):
-    author = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="Кассир")
+    author = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="Кассир", blank=True, null=True)
     name = models.CharField("Наименование", max_length=250, blank=True)
     items = models.ManyToManyField(Item, verbose_name="цены Товаров", related_name="trans", blank=True)
     TYPE_CHOICE = (
@@ -63,6 +55,7 @@ class Transaction(models.Model):
                                     help_text="Дата, когда товар был добавлен в базу")
     last_change = models.DateTimeField("Дата изменении", auto_now_add=True,
                                        help_text="Дата, когда товар был редактирован")
+
 
     def save(self, *args, **kwargs):
         if self.type == "INCOME":

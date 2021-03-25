@@ -21,8 +21,8 @@ class CostsAdmin(admin.ModelAdmin):
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "get_image_thumb", "description", "sell_price", "count")
-    list_display_links = ("id", "name", "get_image_thumb")
+    list_display = ("id", "name", "description", "sell_price", "count")
+    list_display_links = ("id", "name")
     save_on_top = True
     save_as = True
     search_fields = ('id', 'name', 'description')
