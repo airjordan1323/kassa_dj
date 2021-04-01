@@ -1,6 +1,5 @@
-from django.conf import settings
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator
 from datetime import datetime
 from user.models import Account
 
@@ -53,9 +52,6 @@ class Transaction(models.Model):
     sum = models.PositiveIntegerField("Цена")
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True,
                                     help_text="Дата, когда товар был добавлен в базу")
-    last_change = models.DateTimeField("Дата изменении", auto_now_add=True,
-                                       help_text="Дата, когда товар был редактирован")
-
 
     def save(self, *args, **kwargs):
         if self.type == "INCOME":
@@ -65,3 +61,34 @@ class Transaction(models.Model):
     class Meta:
         verbose_name = "Транзакция"
         verbose_name_plural = "Транзакции"
+
+# class CountItems(models.Model):
+#     item = models.ForeignKey(Item, verbose_name='count_item', on_delete=models.CASCADE)
+#     count = models.PositiveSmallIntegerField()
+#
+#     class Meta:
+#         verbose_name = "Кол-во на товар"
+#         verbose_name_plural = "Кол-во на товары"
+
+
+# class Order(models.Model):
+#     author = models.ForeignKey(Account, on_delete=models.CASCADE, verbose_name="Кассир", blank=True, null=True)
+#     name = models.CharField("Наименование", max_length=200)
+#     phone = models.CharField("Телефон", max_length=200)
+#     items = models.ManyToManyField(CountItems, verbose_name="Товары и кол-во", related_name="orders")
+#     TYPE_CHOICE = (
+#         ('ACCEPTED', 'ACCEPTED'),
+#         ('REJECTED', 'REJECTED'),
+#         ('NULL', 'NULL')
+#     )
+#     type_dj = models.CharField("Тип", choices=TYPE_CHOICE, default="NULL", max_length=10)
+#     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
+#     last_change = models.DateTimeField("Дата изменении", default=timezone.now())
+#
+#     def save(self, *args, **kwargs):
+#         self.last_change = timezone.now()
+#         super().save(*args, **kwargs)
+#
+#     class Meta:
+#         verbose_name = "Сетка"
+#         verbose_name_plural = "Сетки"

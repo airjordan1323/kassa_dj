@@ -90,6 +90,7 @@ class ItemUpSerializer(serializers.ModelSerializer):
         model = Item
         exclude = "pub_date",
 
+
 class ItemTransSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
@@ -102,6 +103,12 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = 'id', 'username',
 
 
+class AccountsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = '__all__'
+
+
 class TransactionSerializer(serializers.ModelSerializer):
     items = ItemTransSerializer(many=True)
     author = AccountSerializer()
@@ -111,34 +118,34 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-#############################
-class TransactionsPostSerializer(serializers.ModelSerializer):
-    # items = ItemTransSerializer(many=True)
-    author = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Transaction
-        fields = '__all__'
-
-        def get_author(self, obj, request):
-            author = Transaction.objects.filter(author=request.user).count()
-            serializer = AccountSerializer(author)
-            return serializer.data
-######################33333
-
-
-
 class TransactionPostSerializer(serializers.ModelSerializer):
-    # items = ItemTransSerializer(many=True)
-    # author = AccountSerializer()
-
     class Meta:
         model = Transaction
         fields = '__all__'
 
 
 class BuyItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Item
         fields = "id", "name", "item", "type_in", "sum", "pub_date",
+
+# class OrderSerializer(serializers.ModelSerializer):
+#     items = ItemTransSerializer(many=True)
+#
+#     class Meta:
+#         model = Order
+#         fields = '__all__'
+#
+#
+# class OrderPostSerializer(serializers.ModelSerializer):
+#     # item_dj = ItemTransSerializer(many=True)
+#
+#     class Meta:
+#         model = Order
+#         fields = '__all__'
+#
+#
+# class OrderUpSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Order
+#         exclude = "pub_date", "last_change"
