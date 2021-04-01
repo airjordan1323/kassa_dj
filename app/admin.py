@@ -13,10 +13,26 @@ class CostsAdmin(admin.ModelAdmin):
     list_display_links = ("id", "name")
     list_filter = (
         ('pub_date', DateRangeFilter),
-        ('last_change', DateTimeRangeFilter),
     )
     search_fields = ('id', 'name')
     readonly_fields = ('id', 'pub_date')
+
+
+# @admin.register(CountItems)
+# class CostsAdmin(admin.ModelAdmin):
+#     list_display = ("id", "count")
+#
+
+# @admin.register(Order)
+# class OrdersAdmin(admin.ModelAdmin):
+#     list_display = ("id", "name", "type_dj", "pub_date")
+#     list_display_links = ("id", "name")
+#     list_filter = (
+#         ('pub_date', DateRangeFilter),
+#         ('last_change', DateTimeRangeFilter),
+#     )
+#     search_fields = ('id', 'name')
+#     readonly_fields = ('id', 'pub_date', 'last_change')
 
 
 @admin.register(Item)

@@ -24,22 +24,19 @@ class MyAccoutManager(BaseUserManager):
             username=username,
             password=password,
         )
-        user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
         return user
 
+
 class Account(AbstractBaseUser):
     username = models.CharField("Имя для входа", max_length=30, unique=True)
     email = models.EmailField("Электронный адрес", unique=True)
     date_joined = models.DateTimeField("Дата регистрации", auto_now_add=True)
-    avatar = models.ImageField("Аватарка", upload_to="ava/")
-    is_admin = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
-
 
     REQUIRED_FIELDS = ['email']
     USERNAME_FIELD = 'username'
@@ -50,7 +47,7 @@ class Account(AbstractBaseUser):
         return self.username
 
     def has_perm(self, perm, obj=None):
-        return self.is_admin
+        return self.is_superuser
 
     def has_module_perms(self, app_label):
         return True
